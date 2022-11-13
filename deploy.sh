@@ -21,6 +21,8 @@ replace() {
     if [[ ! -f "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim ]]; then
         sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+        echo "\nVim-plug has been installed. Run :PlugInstall after the first launch to install all plugins."
+        echo "npm might be needed, install it before using CoC in Neovim"
     fi
     for i in ${BACKUP_LIST[@]}; do
         if [[ -d ./$i || -f ./$i ]]; then
