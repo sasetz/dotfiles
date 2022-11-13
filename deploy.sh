@@ -1,7 +1,7 @@
 #!/bin/bash
 
 BACKUP_FILE="${BACKUP_FILE:-./config_list.txt}"
-BACKUP_FOLDER="${BACKUP_FOLDER:-$HOME/backup/dot/dotfiles_$(date +%x_%H:%M)}"
+BACKUP_FOLDER="${BACKUP_FOLDER:-$HOME/backup/dot/dotfiles_$(date +%F_%H:%M)}"
 BACKUP_LIST=()
 
 while read -r LINE; do
