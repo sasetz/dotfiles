@@ -5,6 +5,7 @@ call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
     Plug 'neoclide/coc-yaml'
     " Colorschemes
     Plug 'morhetz/gruvbox'
+    Plug 'catppuccin/vim', { 'as': 'catppuccin' }
     " File management
     Plug 'preservim/nerdtree'
     " Commenter
@@ -43,7 +44,7 @@ set shortmess+=c
 
 " GUI
 
-colorscheme gruvbox
+colorscheme catppuccin_mocha
 
 :let mapleader = ","
 
@@ -182,12 +183,35 @@ let g:NERDToggleCheckAllLines = 1
 nnoremap <C-_> :call nerdcommenter#Comment(0,"toggle")<CR>
 xnoremap <C-_> :call nerdcommenter#Comment(0,"toggle")<CR>
 
+" print ',qf' to auto-fix something on the current line (if the fix is
+" available)
+nmap <leader>qf <Plug>(coc-fix-current)
+
 
 "
 " split screen work
 "
+
+" split the screen with a vertical line
 nnoremap <leader>w <C-w>v
+" split the screen with a horizontal line
+nnoremap <leader>s <C-w>s
+" move to left window
 nnoremap <leader>j <C-w>h
+" move to down window
 nnoremap <leader>k <C-w>j
+" move to up window
 nnoremap <leader>l <C-w>k
+" move to right window
 nnoremap <leader>; <C-w>l
+" close a window
+nnoremap <leader>Q <C-w>q
+
+" + width of a window
+nnoremap <leader><lt> <C-w><lt>
+" - width of a window
+nnoremap <leader>> <C-w>>
+" + height of a window
+nnoremap <leader>- <C-w>-
+" - height of a window
+nnoremap <leader>+ <C-w>+
