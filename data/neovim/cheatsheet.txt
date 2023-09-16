@@ -1,0 +1,79 @@
+## keymaps
+
+Open cheatsheet                    | <leader>cs
+
+Open file browser pane             | Alt-1
+Open errors and warnings pane      | Alt-2
+
+Open code actions                  | <leader>ca
+
+Close any pane                     | Ctrl-Q (in normal mode)
+
+Open todos                         | <leader>st
+
+Align lines in a column by = sign  | <leader>tt (normal and visual modes)
+Align lines in a column first word | <leader>ts (normal and visual modes)
+
+View recent projects               | <leader>sp
+
+Open a new tab                     | <leader>ot
+
+Go back to normal in terminal      | <C-\><C-N>
+
+Open session list                  | <leader>ss
+Open keymap list                   | <leader>sk
+
+Next tab                           | Ctrl-L
+Previous tab                       | Ctrl-H
+
+Split window horizontally          | <leader>h
+Split window vertically            | <leader>v
+
+Move between windows               | Shift-<move-key>
+
+Open a fold                        | zo
+Close a fold                       | zc
+
+## mini.bracketed
+
+Next buffer                        | [B [b ]b ]B
+Comment block                      | [C [c ]c ]C
+Conflict marker                    | [X [x ]x ]X
+Diagnostic                         | [D [d ]d ]D
+File on disk                       | [F [f ]f ]F
+Indent change                      | [I [i ]i ]I
+Jump from jumplist inside current buffer | [J [j ]j ]J
+Location from location list        | [L [l ]l ]L
+Old files                          | [O [o ]o ]O
+Quickfix entry from quickfix list  | [Q [q ]q ]Q
+Tree-sitter node and parents       | [T [t ]t ]T
+Undo states from specially tracked linear history | [U [u ]u ]U
+Window in current tab              | [W [w ]w ]W
+Yank selection replacing latest put region | [Y [y ]y ]Y
+Marks                              | ]' [' ]` [`
+
+## Marks
+
+Create mark                        | m<mark-letter>
+Jump to mark                       | '<mark-letter>
+Jump to mark (works with characters rather than lines) | `<mark-letter>
+Uppercase marks                    | Work across files
+Lowercase marks                    | File-wise
+Jump to next/previous mark         | ]' [' ]` [`
+
+## telescope
+
+Next item                          | Ctrl-N
+Previous item                      | Ctrl-P
+
+Delete item                        | Ctrl-D
+Close telescope                    | Ctrl-Q
+
+## memos
+
+Apply current file as config       | :so
+
+Leave only the current open tab    | :tabonly
+
+Edit cheatsheet                    | :CheatsheetEdit
+
