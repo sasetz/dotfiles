@@ -1,6 +1,0 @@
-{
-    "yaml.enable": true,
-    "yaml.format.enable": true,
-    "yaml.format.singleQuote": true,
-    "yaml.schemaStore.enable": true
-}

@@ -1,0 +1,138 @@
+#!/bin/bash
+
+if [[ ! -e $HOME/.local/bin/configs ]]; then
+    echo "This script is running directly from the repository.
+Do you want to inject it to '~/.local/bin'? If this directory is in your PATH,
+this will make this script execute from anywhere else on the system"
+    read -p "Do you want to create a reference script? [Y/n] " -r
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo "#!/bin/bash
+cd $PWD; ./configs \"\$@\"" > $HOME/.local/bin/configs
+        chmod u+x $HOME/.local/bin/configs
+        echo "Created a script that references this directory and script. Do not delete the script inside of the repo!"
+    fi
+fi
+
+execute_all() {
+    for script in configurations/*.sh; do
+        $script "$@"
+    done
+}
+
+case "$1" in
+    backup)
+        echo 'Starting the backup...'
+        BACKUP_NAME=$(date +%d.%m.%Y_%H:%M)
+        if [[ $# -eq 1 ]]; then
+            execute_all backup "$BACKUP_NAME"
+            exit
+        else
+            shift
+            SCRIPTS=()
+            for arg in "$@"; do
+                if [[ $arg == 'all' ]]; then
+                    execute_all backup "$BACKUP_NAME"
+                    exit
+                fi
+                SCRIPTS+=("$arg.sh")
+            done
+
+            for script in "${SCRIPTS[@]}"; do
+                configurations/$script backup "$BACKUP_NAME"
+            done
+        fi
+        echo "Successfully created a backup!"
+        ;;
+
+    deploy)
+        echo 'Applying configuration(s)...'
+        echo
+        echo 'Warning: this action will erase your current configuration'
+        echo "Following configurations will be deleted: $@"
+        read -p "Are you sure you want to proceed? [y/N] " -r
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            echo 'Cancelling'
+            exit
+        fi
+        if [[ $# -eq 1 ]]; then
+            execute_all deploy
+            exit
+        else
+            shift
+            SCRIPTS=()
+            for arg in "$@"; do
+                if [[ $arg == 'all' ]]; then
+                    execute_all deploy
+                    exit
+                fi
+                SCRIPTS+=("$arg.sh")
+            done
+
+            for script in "${SCRIPTS[@]}"; do
+                configurations/$script deploy
+            done
+        fi
+        echo "Successfully deployed configurations!"
+        ;;
+
+    commit)
+        echo 'Adding applied configurations to the repository...'
+        if [[ $# -eq 1 ]]; then
+            execute_all commit
+            exit
+        else
+            shift
+            SCRIPTS=()
+            for arg in "$@"; do
+                if [[ $arg == 'all' ]]; then
+                    execute_all commit
+                    exit
+                fi
+                SCRIPTS+=("$arg.sh")
+            done
+
+            for script in "${SCRIPTS[@]}"; do
+                configurations/$script commit
+            done
+        fi
+        echo "Successfully added configurations to the repository!"
+        ;;
+    
+    list)
+        echo 'Available configurations:'
+        echo
+        for script in configurations/*.sh; do
+            echo $(basename -s .sh $script)
+        done
+        echo
+        echo "Apply any of these configurations using 'configs deploy [configurations...]'."
+        ;;
+
+    *)
+        echo "    Usage: configs backup [configuration to backup ...]
+           configs deploy [configuration for deploying ...]
+           configs commit [configuration for committing ...]
+           configs list
+
+    Verbs:
+    backup - save applied configurations in a backup directory
+    deploy - apply configurations from repository
+    commit - save applied configurations as a replacement for the old ones in 
+    the repository
+    list   - list all available scripts/apps
+
+    Configurations:
+
+    Names of the configuration scripts to be executed from the repository.
+    There must be no file extension (.sh or similar), just the name of the
+    script (program). Examples:
+    - kitty
+    - alacritty
+    - neovim
+    - all (uses chosen verb on every script)
+
+    If no additional parameters are provided, all scripts are run."
+esac
+
+#vim: filetype=bash
+
