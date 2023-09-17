@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [[ ! -e $HOME/.local/bin/configs ]]; then
     echo "This script is running directly from the repository.
@@ -6,6 +6,7 @@ Do you want to inject it to '~/.local/bin'? If this directory is in your PATH,
 this will make this script execute from anywhere else on the system"
     read -p "Do you want to create a reference script? [Y/n] " -r
     if [[ $REPLY =~ ^[Yy]$ ]]; then
+	mkdir -p $HOME/.local/bin
         echo "#!/bin/bash
 cd $PWD; ./configs \"\$@\"" > $HOME/.local/bin/configs
         chmod u+x $HOME/.local/bin/configs

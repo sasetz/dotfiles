@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 CONFIG_NAME="$1" # display name of the app
 CONFIG_DIR="$2"  # directory of the applied config
