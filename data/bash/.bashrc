@@ -75,7 +75,7 @@ if ${use_color} ; then
 		PS1='\[\033[01;32m\][\u@\h\[\033[01;37m\] \W\[\033[01;32m\]]\$\[\033[00m\] '
 	fi
 
-	alias ls='ls --color=auto'
+	alias ls='lsd --color=auto'
 	alias grep='grep --colour=auto'
 	alias egrep='egrep --colour=auto'
 	alias fgrep='fgrep --colour=auto'
@@ -95,7 +95,7 @@ alias df='df -h'                          # human-readable sizes
 alias free='free -m'                      # show sizes in MB
 alias np='nano -w PKGBUILD'
 alias more=less
-alias ll='ls -lAhX --color=auto --group-directories-first'
+alias ll='lsd -lAhX --color=auto --group-directories-first'
 
 xhost +local:root > /dev/null 2>&1
 
@@ -136,4 +136,4 @@ ex ()
     echo "'$1' is not a valid file"
   fi
 }
-export PATH="$PATH:$HOME/.spicetify:$HOME/install"
+export PATH="$PATH:$HOME/.local/bin"

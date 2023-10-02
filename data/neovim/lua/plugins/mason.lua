@@ -35,10 +35,7 @@ mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
 }
 
--- function that takes an lsp as a table that contains some special properties
--- and bakes it into the function itself
--- it returns a function that refers to the custom lsp, but doesn't take any
--- more arguments
+-- just a function that returns a closure with lsp built into it
 local bake_on_attach = function (lsp)
   -- LSP keymaps
   local raw_on_attach = function(_, bufnr)
@@ -53,39 +50,39 @@ local bake_on_attach = function (lsp)
       vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
     end
 
-    nmap('<leader>rn', lsp.rename, '[R]e[n]ame')
-    nmap('<leader>ca', lsp.code_action, 'Code Action')
+    nmap('<leader>lr', lsp.rename, 'Rename')
+    nmap('<leader>la', lsp.code_action, 'Code Action')
 
     nmap('gd', lsp.definition, '[G]oto [D]efinition')
     nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
     nmap('gI', lsp.implementation, '[G]oto [I]mplementation')
-    nmap('<leader>D', lsp.type_definition, 'Type [D]efinition')
-    nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols,
-      '[D]ocument [S]ymbols')
+    nmap('gD', lsp.declaration, '[G]oto [D]eclaration')
+    nmap('<leader>ld', lsp.type_definition, 'Type [D]efinition')
+    nmap('<leader>sd', require('telescope.builtin').lsp_document_symbols,
+      '[S]earch [D]ocument symbols')
 
     nmap(
-      '<leader>ws',
+      '<leader>sw',
       require('telescope.builtin').lsp_dynamic_workspace_symbols,
-      '[W]orkspace [S]ymbols'
+      '[S]earch [W]orkspace symbols'
     )
 
     -- See `:help K` for why this keymap
-    nmap('K', lsp.hover, 'Hover Documentation')
-    nmap('<C-k>', lsp.signature_help, 'Signature Documentation')
+    --nmap('K', lsp.hover, 'Hover Documentation')
+    nmap('K', lsp.signature_help, 'Signature Documentation')
 
     -- Lesser used LSP functionality
-    nmap('gD', lsp.declaration, '[G]oto [D]eclaration')
     nmap(
-      '<leader>wa',
+      '<leader>lwa',
       lsp.add_workspace_folder,
       '[W]orkspace [A]dd Folder'
     )
     nmap(
-      '<leader>wr',
+      '<leader>lwr',
       lsp.remove_workspace_folder,
       '[W]orkspace [R]emove Folder'
     )
-    nmap('<leader>wl', function()
+    nmap('<leader>lwl', function()
       print(vim.inspect(lsp.list_workspace_folders()))
     end, '[W]orkspace [L]ist Folders')
 
@@ -117,6 +114,8 @@ rt.setup({
     on_attach = bake_on_attach(rt),
   },
 })
+
+-- ========= Unused ccls stuff =========
 
 _G.ccls_cmd = '/usr/local/timostools/linux/ccls'
 _G.ccls_init_options= {}

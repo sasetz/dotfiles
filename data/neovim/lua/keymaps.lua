@@ -42,11 +42,14 @@ vim.keymap.set('n', '<leader>sk', ':Telescope keymaps<cr>', { desc = '[S]earch [
 -- display errors under cursor
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Diagnostics: Previous' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Diagnostics: Next' })
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open diagnostics' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
+vim.keymap.set('n', '<leader>le', vim.diagnostic.open_float, { desc = 'LSP: Open diagnostics' })
+vim.keymap.set('n', '<leader>lq', vim.diagnostic.setloclist, { desc = 'LSP: Diagnostics to location list'})
 
--- check cheatsheets
-vim.keymap.set('n', '<leader>cs', ':Cheatsheet<cr>', { desc = 'Open cheatsheet', silent = true, noremap = true })
+-- [O]pen
+vim.keymap.set('n', '<leader>oc', ':Cheatsheet<cr>', { desc = 'Open cheatsheet', silent = true, noremap = true })
+
+vim.keymap.set('n', '<leader>of', MiniFiles.open,
+  { desc = 'Open file manager', silent = true, noremap = true })
 
 -- align items by characters
 vim.keymap.set({ 'n', 'v' }, '<leader>tt', ':Tabularize /=<cr>',
@@ -54,25 +57,29 @@ vim.keymap.set({ 'n', 'v' }, '<leader>tt', ':Tabularize /=<cr>',
 vim.keymap.set({ 'n', 'v' }, '<leader>ts', ':Tabularize /\zs<cr>',
   { desc = '[T]abularize by first [S]pace signs', silent = true, noremap = true })
 
-vim.keymap.set('n', '<M-.>', ':BufferNext<cr>',
+vim.keymap.set('n', '<M-l>', ':BufferNext<cr>',
   { desc = 'Next tab', silent = true, noremap = true })
-vim.keymap.set('n', '<M-,>', ':BufferPrevious<cr>',
+vim.keymap.set('n', '<M-h>', ':BufferPrevious<cr>',
   { desc = 'Previous tab', silent = true, noremap = true })
-vim.keymap.set('n', '<S-h>', '<C-w>h',
+vim.keymap.set('n', '<C-h>', '<C-w>h',
   { desc = 'Left window', silent = true })
-vim.keymap.set('n', '<S-l>', '<C-w>l',
+vim.keymap.set('n', '<C-l>', '<C-w>l',
   { desc = 'Right window', silent = true, noremap = true })
-vim.keymap.set('n', '<S-j>', '<C-w>j',
+vim.keymap.set('n', '<C-j>', '<C-w>j',
   { desc = 'Bottom window', silent = true, noremap = true })
-vim.keymap.set('n', '<S-k>', '<C-w>k',
+vim.keymap.set('n', '<C-k>', '<C-w>k',
   { desc = 'Top window', silent = true, noremap = true })
-vim.keymap.set('n', '<leader>h', ':split<cr>',
+vim.keymap.set('n', '<leader>dh', ':split<cr>',
   { desc = 'Horizontal split', silent = true, noremap = true })
-vim.keymap.set('n', '<leader>v', ':vsplit<cr>',
+vim.keymap.set('n', '<leader>dv', ':vsplit<cr>',
   { desc = 'Vertical split', silent = true, noremap = true })
+vim.keymap.set('n', '<leader>w', ':w<cr>',
+  { desc = 'Save', silent = true, noremap = true })
+vim.keymap.set('n', '<leader>q', ':q<cr>',
+  { desc = 'Quit', silent = true, noremap = true })
 
 -- close tab
-vim.keymap.set('n', '<leader>pp', ':BufferClose<cr>',
+vim.keymap.set('n', '<leader>c', ':BufferClose<cr>',
   { desc = 'Close current buffer', silent = true, noremap = true })
 
 -- [[ PANELS AND USEFUL STUFF ]]
@@ -92,9 +99,6 @@ vim.keymap.set('n', '<M-3>', ':AerialToggle<cr>',
 vim.keymap.set('n', '<C-e>', '3<C-e>',
   { desc = 'Move down', silent = true, noremap = true })
 vim.keymap.set('n', '<C-y>', '3<C-y>',
-  { desc = 'Move up', silent = true, noremap = true })
-
-vim.keymap.set('n', '<leader>f', MiniFiles.open,
   { desc = 'Move up', silent = true, noremap = true })
 
 -- vim: ts=2 sts=2 sw=2 et
