@@ -13,8 +13,13 @@
 -- TODO: add keybinds for reformatting the file
 -- TODO: add option to put the arguments of a call to separate lines
 local servers = {
-  lua_ls = {},
-  rust_analyzer = {},
+  lua_ls = {
+    Lua = {
+      workspace = {
+        checkThirdParty = false,
+      }
+    }
+  },
 }
 
 -- Setup neovim lua configuration
@@ -36,9 +41,9 @@ mason_lspconfig.setup {
 }
 
 -- just a function that returns a closure with lsp built into it
-local bake_on_attach = function (lsp)
+local make_on_attach = function(lsp)
   -- LSP keymaps
-  local raw_on_attach = function(_, bufnr)
+  local on_attach_closure = function(_, bufnr)
     -- In this case, we create a function that lets us more easily define
     -- mappings specific for LSP related items. It sets the mode, buffer and
     -- description for us each time.
@@ -91,7 +96,7 @@ local bake_on_attach = function (lsp)
       lsp.format()
     end, { desc = 'Format current buffer with LSP' })
   end
-  return raw_on_attach
+  return on_attach_closure
 end
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -101,56 +106,48 @@ mason_lspconfig.setup_handlers {
   function(server_name)
     require('lspconfig')[server_name].setup {
       capabilities = capabilities,
-      on_attach = bake_on_attach(vim.lsp.buf),
+      on_attach = make_on_attach(vim.lsp.buf),
       settings = servers[server_name],
     }
   end,
 }
 
-local rt = require("rust-tools")
-
-rt.setup({
-  server = {
-    on_attach = bake_on_attach(rt),
-  },
-})
-
 -- ========= Unused ccls stuff =========
 
 _G.ccls_cmd = '/usr/local/timostools/linux/ccls'
-_G.ccls_init_options= {}
+_G.ccls_init_options = {}
 
 if vim.fn.getcwd():find('panos') then
-    _G.ccls_init_options = {
-      index = {
-          blacklist = {
-              "./mgmt_core/build-tools/cython-0.28.x/.",
-              "./bcm/.*",
-              "./bcm_.*",
-              "./build/ptr/.*",
-            },
-          initialBlacklist = {
-              "./mgmt_core/build-tools/cython-0.28.x/.",
-              "./bcm/.*",
-              "./bcm_.*",
-              "./build/ptr/.*",
-            },
-          initialWhitelist = {
-              "./gmi/.",
-              "./mgmt_core/.",
-              "./mgmt_agent/.",
-              "./mgmt_schema/.",
-              "./mci/."
-            },
-          whitelist = {
-              "./gmi/.",
-              "./mgmt_core/.",
-              "./mgmt_agent/.",
-              "./mgmt_schema/.",
-              "./mci/."
-            },
-        }
+  _G.ccls_init_options = {
+    index = {
+      blacklist = {
+        "./mgmt_core/build-tools/cython-0.28.x/.",
+        "./bcm/.*",
+        "./bcm_.*",
+        "./build/ptr/.*",
+      },
+      initialBlacklist = {
+        "./mgmt_core/build-tools/cython-0.28.x/.",
+        "./bcm/.*",
+        "./bcm_.*",
+        "./build/ptr/.*",
+      },
+      initialWhitelist = {
+        "./gmi/.",
+        "./mgmt_core/.",
+        "./mgmt_agent/.",
+        "./mgmt_schema/.",
+        "./mci/."
+      },
+      whitelist = {
+        "./gmi/.",
+        "./mgmt_core/.",
+        "./mgmt_agent/.",
+        "./mgmt_schema/.",
+        "./mci/."
+      },
     }
+  }
 end
 
 local lspconfig = require('lspconfig')
@@ -192,4 +189,3 @@ local ccls_init_opts = vim.tbl_deep_extend("force", ccls_init_opts_local, {
 --     --capabilities = my_caps_table_or_func
 -- }
 -- require("ccls").setup { lsp = { lspconfig = server_config } }
-

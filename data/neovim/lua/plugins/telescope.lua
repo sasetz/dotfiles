@@ -6,9 +6,13 @@ require('telescope').setup {
     mappings = {
       i = {
         ['<C-u>'] = false,
-        ['<C-d>'] = actions.delete_buffer + actions.move_to_top,
+        ['<C-d>'] = actions.delete_buffer,
         ['<C-q>'] = actions.close,
-        ['<esc>'] = actions.close
+        ['<esc>'] = actions.close,
+        ['<C-j>'] = actions.move_selection_next,
+        ['<C-k>'] = actions.move_selection_previous,
+        ['<C-Up>'] = actions.preview_scrolling_up,
+        ['<C-Down>'] = actions.preview_scrolling_down,
       },
     },
     layout_strategy = 'vertical',

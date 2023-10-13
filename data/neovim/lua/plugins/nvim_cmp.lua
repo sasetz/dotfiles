@@ -19,13 +19,13 @@ cmp.setup {
     end,
   },
   mapping = cmp.mapping.preset.insert {
-    ['<C-p>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-n>'] = cmp.mapping.scroll_docs(4),
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
-    -- ['<CR>'] = cmp.mapping.confirm {
-    --   -- behavior = cmp.ConfirmBehavior.Replace,
-    --   select = true,
-    -- },
+    ['<CR>'] = cmp.mapping.confirm {
+      -- behavior = cmp.ConfirmBehavior.Replace,
+      -- select = true,
+    },
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
@@ -52,11 +52,15 @@ cmp.setup {
   },
   formatting = {
     format = lspkind.cmp_format({
-      mode = 'text', -- type of annotations: 'text', 'text_symbol', 'symbol_text', 'symbol'
+      mode = 'symbol_text', -- type of annotations: 'text', 'text_symbol', 'symbol_text', 'symbol'
       maxwidth = 75, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
       ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
     })
   },
+  window = {
+    completion = cmp.config.window.bordered(),
+    documentation = cmp.config.window.bordered(),
+  }
 }
 
 require('treesitter-context').setup{

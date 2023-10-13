@@ -42,7 +42,7 @@ vim.wo.signcolumn = 'yes'
 
 -- set colorscheme
 vim.o.termguicolors = true
-vim.cmd 'colorscheme catppuccin-frappe'
+vim.cmd 'colorscheme onedark'
 
 -- set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
@@ -50,8 +50,14 @@ vim.o.completeopt = 'menuone,noselect'
 -- set amount of undos held in memory
 vim.o.undolevels = 5000
 
+-- set maximum height of popup windows (auto-completion)
+vim.o.pumheight = 16
+
 -- always show tabline
 vim.o.showtabline = 2
+
+-- makes hidden buffers not be unloaded
+vim.o.hidden = true
 
 if vim.g.neovide then
   vim.g.neovide_scale_factor = 0.7

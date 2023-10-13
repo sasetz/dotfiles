@@ -21,12 +21,6 @@ require('mini.bracketed').setup {
 -- comment toggle by `gc` or `gcc`
 require('mini.comment').setup()
 
--- autocompletion
--- require('mini.completion').setup()
-
--- automatically add pair brackets
-require('mini.pairs').setup()
-
 -- file browser
 require('mini.files').setup()
 

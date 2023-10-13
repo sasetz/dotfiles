@@ -4,7 +4,7 @@ require('illuminate').configure {
     'treesitter',
     'regex',
   },
-  delay = 50,
+  delay = 90,
   filetypes_denylist = {
     'dirvish',
     'fugitive',
@@ -13,7 +13,7 @@ require('illuminate').configure {
   },
 }
 
-local bg = '#424557'
+local bg = '#2f313d'
 vim.cmd([[hi IlluminatedWordText gui=none guibg=]] .. bg)
 vim.cmd([[hi IlluminatedWordRead gui=none guibg=]] .. bg)
 vim.cmd([[hi IlluminatedWordWrite gui=none guibg=]] .. bg)

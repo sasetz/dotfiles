@@ -31,6 +31,7 @@ require('lazy').setup({
       {
         'j-hui/fidget.nvim',
         tag = 'legacy',
+        event = 'LspAttach',
       },
 
       -- additional lua configuration and docs
@@ -38,7 +39,7 @@ require('lazy').setup({
     },
   },
 
-  -- autocompletion
+  -- enables autocompletion
   {
     'hrsh7th/nvim-cmp',
     dependencies = {
@@ -81,14 +82,30 @@ require('lazy').setup({
   -- inspect git data (blame, add, etc.) per line
   'lewis6991/gitsigns.nvim',
 
-  -- Catpuccin theme
-  { 'catppuccin/nvim', name = 'catppuccin' },
+  -- Onedark theme
+  {
+    'navarasu/onedark.nvim',
+    opts = {
+      style = 'warmer',
+      term_colors = true,
+      highlights = {
+        IlluminatedWordText = { bg = '#2f313d' },
+        IlluminatedWordRead = { bg = '#2f313d' },
+        IlluminatedWordWrite = { bg = '#2f313d' },
+        NotifyBackground = { bg = '#232323' },
+      },
+      transparent = true,
+    }
+  },
 
   -- status line
   'nvim-lualine/lualine.nvim',
 
   -- indent even on blank lines
-  'lukas-reineke/indent-blankline.nvim',
+  {
+    'lukas-reineke/indent-blankline.nvim',
+    main = 'ibl',
+  },
   -- autodetect tab width
   'tpope/vim-sleuth',
 
@@ -101,22 +118,23 @@ require('lazy').setup({
   },
 
   -- Fuzzy Finder (files, lsp, etc)
-  { 'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim' } },
+  {
+    'nvim-telescope/telescope.nvim',
+    branch = '0.1.x',
+    dependencies = {
+      'nvim-lua/plenary.nvim'
+    }
+  },
 
   -- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
   { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make', cond = vim.fn.executable 'make' == 1 },
 
   -- welcome screen on startup
-  -- TODO: make so that the open directory behaves as normal
-  -- TODO: make so that it works with autosession
   {
     'glepnir/dashboard-nvim',
     event = 'VimEnter',
-    config = function()
-      require('dashboard').setup {
-        -- config
-      }
-    end,
+    opts = {
+    },
     dependencies = { 'nvim-tree/nvim-web-devicons' }
   },
 
@@ -176,39 +194,22 @@ require('lazy').setup({
   -- reformat lines so that they align by some char
   { 'godlygeek/tabular' },
 
+  -- fuzzy finding, used in telescope plugin picker
   {
     'ibhagwan/fzf-lua',
     event = 'VeryLazy',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
-      require('fzf-lua').setup({'telescope'})
+      require('fzf-lua').setup({ 'telescope' })
     end
   },
 
-  -- add sessions, restores layout for each project
-  {
-      'olimorris/persisted.nvim',
-      config = true
-  },
-
-  -- work with projects rather than folders
-  {
-    'Abstract-IDE/penvim',
-  },
-
-  -- plugin for displaying layout
+  -- plugin for displaying overview of the current file (functions, etc.)
   {
     'stevearc/aerial.nvim',
   },
 
-  {
-    'ThePrimeagen/harpoon',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-    },
-  },
-
-  -- a lot of helpful plugins in one
+  -- a lot of helpful plugins in one, see plugins/mini.lua
   {
     'echasnovski/mini.nvim',
     version = false,
@@ -217,14 +218,9 @@ require('lazy').setup({
     },
   },
 
-  -- highlight word under cursor
+  -- highlight word under cursor using lsp or treesitter
   {
     'RRethy/vim-illuminate',
-  },
-
-  -- rust additions
-  {
-    'simrat39/rust-tools.nvim',
   },
 
   -- tabline
@@ -241,10 +237,87 @@ require('lazy').setup({
     version = '^1.0.0',
   },
 
-  -- LSP for C/C++
+  -- places the closing brackets when you type the opening one
   {
-    'ranjithshegde/ccls.nvim',
+    'windwp/nvim-autopairs',
+    event = "InsertEnter",
+    opts = {
+      check_ts = true,
+    }
   },
+
+  -- adds very nice ui changes, such as cmd, ui choice, etc.
+  -- also adds search cursor, when it is activated with total search hits
+  {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    opts = {
+      lsp = {
+        -- (copied from github page without concerns)
+        override = {
+          ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+          ["vim.lsp.util.stylize_markdown"] = true,
+          ["cmp.entry.get_documentation"] = false,
+        },
+        progress = {
+          enabled = false, -- there's already fidget.nvim for that
+        },
+      },
+      presets = {
+        bottom_search = true,         -- use a classic bottom cmdline for search
+        command_palette = true,       -- position the cmdline and popupmenu together
+        long_message_to_split = true, -- long messages will be sent to a split
+        inc_rename = false,           -- enables an input dialog for inc-rename.nvim
+        lsp_doc_border = true,        -- add a border to hover docs and signature help
+      },
+    },
+    dependencies = {
+      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+      'MunifTanjim/nui.nvim',
+
+      -- replaces ui choice with telescope modal
+      {
+        'stevearc/dressing.nvim',
+        opts = {},
+      },
+      -- places notifications to the top right corner
+      {
+        'rcarriga/nvim-notify',
+        opts = {
+          fps = 60,
+          icons = {
+            DEBUG = "",
+            ERROR = "",
+            TRACE = "",
+            INFO = "",
+            WARN = ""
+          },
+          render = "compact",
+          stages = "fade",
+        },
+      }
+    }
+  },
+
+  -- adds simple session management, using vim's builtin sessions
+  {
+    'Shatur/neovim-session-manager',
+    opts = {
+      autoload_mode = 'Disabled',
+      autosave_ignore_dirs = {
+        '~'
+      },
+      autosave_only_in_session = true,
+    },
+  },
+
+  -- toggleable terminal inside Neovim
+  {
+    'akinsho/toggleterm.nvim',
+    version = "v2.8.0",
+    opts = {
+    }
+  }
 })
 
 -- load the configurations

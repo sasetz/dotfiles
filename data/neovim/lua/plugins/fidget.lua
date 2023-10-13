@@ -7,6 +7,9 @@ require('fidget').setup{
   },
   timer = {
     spinner_rate = 125
+  },
+  window = {
+    blend = 0,
   }
 }
 
