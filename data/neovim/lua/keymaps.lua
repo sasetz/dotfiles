@@ -144,10 +144,12 @@ vim.keymap.set('n', '<leader>q', ':q<cr>',
 
 -- {{{ UI
 
-vim.keymap.set('n', '<leader>dh', ':split<cr>',
+vim.keymap.set('n', '<leader>uh', ':split<cr>',
   { desc = 'Horizontal split', silent = true, noremap = true })
-vim.keymap.set('n', '<leader>dv', ':vsplit<cr>',
+vim.keymap.set('n', '<leader>uv', ':vsplit<cr>',
   { desc = 'Vertical split', silent = true, noremap = true })
+vim.keymap.set('n', '<leader>um', '<C-w>_',
+  { desc = 'Maximize window', silent = true, noremap = true })
 
 -- }}}
 
@@ -181,7 +183,6 @@ vim.keymap.set('t', '<Esc>', '<C-\\><C-n>',
 
 local Terminal = require('toggleterm.terminal').Terminal
 local shell    = Terminal:new({
-  cmd = 'zsh',
   direction = 'float',
 })
 local function toggle_terminal()
