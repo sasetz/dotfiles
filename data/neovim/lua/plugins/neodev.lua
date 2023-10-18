@@ -1,5 +1,5 @@
 return {
-  'williamboman/mason.nvim',
+  'folke/neodev.nvim',
   opts = {
   },
   dependencies = {

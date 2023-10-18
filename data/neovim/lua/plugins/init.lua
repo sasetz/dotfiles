@@ -1,7 +1,12 @@
+-- {{{ Leader
+
 -- set <space> as the leader key
--- NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+
+-- }}}
+
+-- {{{ Lazy init
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -16,58 +21,27 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- }}}
+
 vim.o.termguicolors = true
 
-require('lazy').setup({
+require('lazy').setup {
   -- lsp configuration
-  {
-    'neovim/nvim-lspconfig',
-    dependencies = {
-      -- lsp manager
-      'williamboman/mason.nvim',
-      'williamboman/mason-lspconfig.nvim',
-
-      -- spinner and status for lsp
-      {
-        'j-hui/fidget.nvim',
-        tag = 'legacy',
-        event = 'LspAttach',
-      },
-
-      -- additional lua configuration and docs
-      'folke/neodev.nvim',
-    },
-  },
+  require('plugins.lspconfig'),
+  require('plugins.mason'),
+  require('plugins.mason-lspconfig'),
+  require('plugins.neodev'),
+  -- lsp progress status in the corner
+  require('plugins.fidget'),
 
   -- enables autocompletion
-  {
-    'hrsh7th/nvim-cmp',
-    dependencies = {
-      'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-nvim-lsp-signature-help',
-      'hrsh7th/cmp-vsnip',
-      'hrsh7th/vim-vsnip',
-      'rafamadriz/friendly-snippets',
-      'onsails/lspkind.nvim',
-    },
-  },
+  require('plugins.nvim_cmp'),
 
   -- highlighting, navigation, syntax overall
-  {
-    'nvim-treesitter/nvim-treesitter',
-    build = function()
-      pcall(require('nvim-treesitter.install').update { with_sync = true })
-    end,
-    version = nil,
-  },
+  require('plugins.treesitter'),
 
   -- showing context
-  {
-    'nvim-treesitter/nvim-treesitter-context',
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter-context',
-    },
-  },
+  require('plugins.treesitter-context'),
 
   -- additional text objects for treesitter
   {
@@ -80,7 +54,7 @@ require('lazy').setup({
   -- github command to browse it
   'tpope/vim-rhubarb',
   -- inspect git data (blame, add, etc.) per line
-  'lewis6991/gitsigns.nvim',
+  require('plugins.gitsigns'),
 
   -- Onedark theme
   {
@@ -99,23 +73,41 @@ require('lazy').setup({
   },
 
   -- status line
-  'nvim-lualine/lualine.nvim',
+  require('plugins.lualine'),
 
   -- indent even on blank lines
   {
     'lukas-reineke/indent-blankline.nvim',
     main = 'ibl',
+    opts = {
+      -- browse unicode box drawing symbols for more
+      indent = { char = '│' },
+      whitespace = { highlight = { "Whitespace", "NonText" } },
+      exclude = {
+        filetypes = {
+          'lspinfo',
+          'packer',
+          'checkhealth',
+          'help',
+          'man',
+          '',
+          'aerial',
+          'dashboard',
+        },
+        buftypes = {
+          'terminal',
+          'prompt',
+          'quickfix',
+          'nofile',
+        }
+      },
+    }
   },
   -- autodetect tab width
   'tpope/vim-sleuth',
 
   -- file browser
-  {
-    'nvim-tree/nvim-tree.lua',
-    dependencies = {
-      'nvim-tree/nvim-web-devicons', -- optional, for file icons
-    },
-  },
+  require('plugins.nvim_tree'),
 
   -- Fuzzy Finder (files, lsp, etc)
   {
@@ -127,7 +119,7 @@ require('lazy').setup({
   },
 
   -- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
-  { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make', cond = vim.fn.executable 'make' == 1 },
+  require('plugins.telescope'),
 
   -- welcome screen on startup
   {
@@ -157,10 +149,8 @@ require('lazy').setup({
   {
     'folke/todo-comments.nvim',
     dependencies = 'nvim-lua/plenary.nvim',
-    config = function()
-      require('todo-comments').setup {
-      }
-    end
+    opts = {
+    },
   },
 
   -- key mappings hints, press leader (space) and wait for a second to show
@@ -175,15 +165,7 @@ require('lazy').setup({
   },
 
   -- cheatsheet to make notes about new features I add
-  {
-    'sudormrfbin/cheatsheet.nvim',
-
-    dependencies = {
-      { 'nvim-telescope/telescope.nvim' },
-      { 'nvim-lua/popup.nvim' },
-      { 'nvim-lua/plenary.nvim' },
-    }
-  },
+  require('plugins.cheatsheet'),
 
   -- add color tint to bg of the hex colors for CSS
   {
@@ -205,23 +187,13 @@ require('lazy').setup({
   },
 
   -- plugin for displaying overview of the current file (functions, etc.)
-  {
-    'stevearc/aerial.nvim',
-  },
+  require('plugins.aerial'),
 
   -- a lot of helpful plugins in one, see plugins/mini.lua
-  {
-    'echasnovski/mini.nvim',
-    version = false,
-    dependencies = {
-      'nvim-tree/nvim-web-devicons',
-    },
-  },
+  require('plugins.mini'),
 
   -- highlight word under cursor using lsp or treesitter
-  {
-    'RRethy/vim-illuminate',
-  },
+  require('plugins.illuminate'),
 
   -- tabline
   {
@@ -248,55 +220,28 @@ require('lazy').setup({
 
   -- adds very nice ui changes, such as cmd, ui choice, etc.
   -- also adds search cursor, when it is activated with total search hits
-  {
-    "folke/noice.nvim",
-    event = "VeryLazy",
-    opts = {
-      lsp = {
-        -- (copied from github page without concerns)
-        override = {
-          ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-          ["vim.lsp.util.stylize_markdown"] = true,
-          ["cmp.entry.get_documentation"] = false,
-        },
-        progress = {
-          enabled = false, -- there's already fidget.nvim for that
-        },
-      },
-      presets = {
-        bottom_search = true,         -- use a classic bottom cmdline for search
-        command_palette = true,       -- position the cmdline and popupmenu together
-        long_message_to_split = true, -- long messages will be sent to a split
-        inc_rename = false,           -- enables an input dialog for inc-rename.nvim
-        lsp_doc_border = true,        -- add a border to hover docs and signature help
-      },
-    },
-    dependencies = {
-      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
-      'MunifTanjim/nui.nvim',
+  require('plugins.noice'),
 
-      -- replaces ui choice with telescope modal
-      {
-        'stevearc/dressing.nvim',
-        opts = {},
+  -- nice notifications at the top right corner
+  {
+    'rcarriga/nvim-notify',
+    opts = {
+      fps = 60,
+      icons = {
+        DEBUG = "",
+        ERROR = "",
+        TRACE = "",
+        INFO = "",
+        WARN = ""
       },
-      -- places notifications to the top right corner
-      {
-        'rcarriga/nvim-notify',
-        opts = {
-          fps = 60,
-          icons = {
-            DEBUG = "",
-            ERROR = "",
-            TRACE = "",
-            INFO = "",
-            WARN = ""
-          },
-          render = "compact",
-          stages = "fade",
-        },
-      }
-    }
+      render = "compact",
+      stages = "fade",
+    },
+  },
+  -- replaces ui choice with telescope modal
+  {
+    'stevearc/dressing.nvim',
+    opts = {},
   },
 
   -- adds simple session management, using vim's builtin sessions
@@ -317,8 +262,5 @@ require('lazy').setup({
     version = "v2.8.0",
     opts = {
     }
-  }
-})
-
--- load the configurations
-require('plugins.plugins')
+  },
+}

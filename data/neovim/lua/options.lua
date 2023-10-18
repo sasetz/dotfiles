@@ -59,6 +59,9 @@ vim.o.showtabline = 2
 -- makes hidden buffers not be unloaded
 vim.o.hidden = true
 
+-- make folds form on triple curly braces
+vim.opt.foldmethod = 'marker'
+
 if vim.g.neovide then
   vim.g.neovide_scale_factor = 0.7
 end

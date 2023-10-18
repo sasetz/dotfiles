@@ -1,15 +1,19 @@
 -- Turn on lsp status information
-require('fidget').setup{
-  text = {
-    -- spinner = {"▙", "▟", "▜", "▛"},
-    spinner = 'dots',
-    done = ''
+return {
+  'j-hui/fidget.nvim',
+  tag = 'legacy',
+  event = 'LspAttach',
+  opts = {
+    text = {
+      -- spinner = {"▙", "▟", "▜", "▛"},
+      spinner = 'dots',
+      done = ''
+    },
+    timer = {
+      spinner_rate = 125
+    },
+    window = {
+      blend = 0,
+    }
   },
-  timer = {
-    spinner_rate = 125
-  },
-  window = {
-    blend = 0,
-  }
 }
-
