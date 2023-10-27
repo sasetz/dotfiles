@@ -1,8 +1,8 @@
 vim.api.nvim_create_autocmd({'BufEnter', 'BufWinEnter'}, {
   pattern = {'*.c', '*.cpp', '*.h'},
   callback = function ()
-    vim.keymap.set('n', '<leader>lh', ':ClangdSwitchSourceHeader<cr>',
-      { desc = 'LSP: switch source/header', silent = true, noremap = true })
+    vim.keymap.set('n', '<leader>lh', ':Ouroboros<cr>',
+      { desc = 'LSP: switch source/header' })
   end
 })
 
