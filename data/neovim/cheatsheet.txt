@@ -1,6 +1,6 @@
 ## keymaps
 
-Open cheatsheet                    | <leader>cs
+Open cheatsheet                    | <leader>oc
 
 Open file browser pane             | Alt-1
 Open errors and warnings pane      | Alt-2

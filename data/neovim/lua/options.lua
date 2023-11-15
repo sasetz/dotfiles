@@ -63,7 +63,12 @@ vim.o.hidden = true
 vim.opt.foldmethod = 'marker'
 
 if vim.g.neovide then
-  vim.g.neovide_scale_factor = 0.7
+  vim.o.guifont = "FiraCode Nerd Font:h10"
+  vim.g.neovide_theme = 'onedark'
+  vim.g.neovide_transparency = 0.8
+  vim.g.neovide_scroll_animation_length = 0.3
+  vim.g.neovide_refresh_rate = 144
+
 end
 
 -- vim: ts=2 sts=2 sw=2 et
