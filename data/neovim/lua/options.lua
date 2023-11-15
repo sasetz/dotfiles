@@ -61,14 +61,10 @@ vim.o.hidden = true
 
 -- make folds form on triple curly braces
 vim.opt.foldmethod = 'marker'
+vim.o.guifont = "FiraCode Nerd Font Mono:h10"
 
 if vim.g.neovide then
-  vim.o.guifont = "FiraCode Nerd Font:h10"
-  vim.g.neovide_theme = 'onedark'
-  vim.g.neovide_transparency = 0.8
-  vim.g.neovide_scroll_animation_length = 0.3
   vim.g.neovide_refresh_rate = 144
-
 end
 
 -- vim: ts=2 sts=2 sw=2 et

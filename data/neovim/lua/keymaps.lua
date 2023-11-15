@@ -181,7 +181,7 @@ vim.keymap.set('t', '<Esc>', '<C-\\><C-n>',
 
 local Terminal = require('toggleterm.terminal').Terminal
 local shell    = Terminal:new({
-  cmd = 'zsh',
+  cmd = 'fish',
   direction = 'float',
 })
 local function toggle_terminal()
