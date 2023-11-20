@@ -198,6 +198,22 @@ vim.keymap.set({ 'n', 't' }, '<F7>', toggle_terminal,
 
 -- }}}
 
+-- {{{ Git
+
+vim.keymap.set('n', '<leader>gb', ':Gitsigns toggle_current_line_blame<cr>',
+  { desc = 'Toggle cursor line blame', silent = true, noremap = true })
+
+vim.keymap.set('n', '<leader>gd', ':Git difftool<cr>',
+  { desc = 'Fill quickfix with git diff', silent = true, noremap = true })
+
+vim.keymap.set('n', '<leader>gs', ':Git status<cr>',
+  { desc = 'Git status', silent = true, noremap = true })
+
+vim.keymap.set('n', '<leader>ga', ':Git add .<cr>',
+  { desc = 'Git status', silent = true, noremap = true })
+
+-- }}}
+
 -- test
 vim.keymap.set('n', '<leader>=', function()
     vim.ui.select({ 'build debug', 'build release', 'run', 'regression', 'review' }, {
