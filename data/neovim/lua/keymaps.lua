@@ -148,6 +148,8 @@ vim.keymap.set('n', '<leader>dh', ':split<cr>',
   { desc = 'Horizontal split', silent = true, noremap = true })
 vim.keymap.set('n', '<leader>dv', ':vsplit<cr>',
   { desc = 'Vertical split', silent = true, noremap = true })
+vim.keymap.set('n', '<leader>dn', ':set relativenumber!<cr>',
+  { desc = 'Toggle relative line number', silent = true, noremap = true })
 
 -- }}}
 
