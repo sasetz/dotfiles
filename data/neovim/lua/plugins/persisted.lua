@@ -1,3 +1,4 @@
+-- NOTE: persisted is legacy file
 require('persisted').setup({
   autoload = true,
   on_autoload_no_session = function()

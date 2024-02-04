@@ -25,10 +25,15 @@ return {
     }
 
     -- comment toggle by `gc` or `gcc`
-    require('mini.comment').setup()
+    require('mini.comment').setup {
+    }
 
     -- file browser
-    require('mini.files').setup()
+    require('mini.files').setup {
+      options = {
+        use_as_default_explorer = false,
+      }
+    }
 
     -- map of the file in top right corner
     require('mini.map').setup()

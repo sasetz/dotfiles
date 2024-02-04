@@ -173,9 +173,6 @@ require('lazy').setup {
     config = function() require("colorizer").setup(nil, { css = true }) end,
   },
 
-  -- reformat lines so that they align by some char
-  { 'godlygeek/tabular' },
-
   -- fuzzy finding, used in telescope plugin picker
   {
     'ibhagwan/fzf-lua',
@@ -196,18 +193,7 @@ require('lazy').setup {
   require('plugins.illuminate'),
 
   -- tabline
-  {
-    'romgrk/barbar.nvim',
-    dependencies = {
-      'lewis6991/gitsigns.nvim',
-      'nvim-tree/nvim-web-devicons',
-    },
-    init = function() vim.g.barbar_auto_setup = false end,
-    opts = {
-      animation = false,
-    },
-    version = '^1.0.0',
-  },
+  require('plugins.tabby'),
 
   -- places the closing brackets when you type the opening one
   {
@@ -263,4 +249,12 @@ require('lazy').setup {
     opts = {
     }
   },
+
+  -- icon picker for unicode and nerd fonts
+  {
+    'ziontee113/icon-picker.nvim',
+    opts = {
+      disable_legacy_commands = true,
+    }
+  }
 }

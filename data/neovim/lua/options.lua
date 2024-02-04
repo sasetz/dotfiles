@@ -67,4 +67,6 @@ if vim.g.neovide then
   vim.g.neovide_refresh_rate = 144
 end
 
+vim.opt.sessionoptions = 'blank,globals,buffers,curdir,folds,help,tabpages,winsize,terminal'
+
 -- vim: ts=2 sts=2 sw=2 et
