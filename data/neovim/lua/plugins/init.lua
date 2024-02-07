@@ -256,5 +256,17 @@ require('lazy').setup {
     opts = {
       disable_legacy_commands = true,
     }
-  }
+  },
+
+  {
+    'mfussenegger/nvim-dap',
+    opts = {
+    }
+  },
+
+  {
+    'rcarriga/nvim-dap-ui',
+    opts = {
+    }
+  },
 }

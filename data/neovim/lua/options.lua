@@ -63,6 +63,7 @@ vim.o.hidden = true
 vim.opt.foldmethod = 'marker'
 vim.o.guifont = "FiraCode Nerd Font Mono:h10"
 
+-- neovide options
 if vim.g.neovide then
   vim.g.neovide_refresh_rate = 144
 end
