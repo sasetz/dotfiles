@@ -258,12 +258,12 @@ require('lazy').setup {
     }
   },
 
+  -- debugging capabilities
   {
     'mfussenegger/nvim-dap',
-    opts = {
-    }
   },
 
+  -- debugging UI
   {
     'rcarriga/nvim-dap-ui',
     opts = {
