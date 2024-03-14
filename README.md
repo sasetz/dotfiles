@@ -28,3 +28,10 @@ that, add and commit your changes. To add new programs, add a script to the
 `./configurations` directory. You can simply copy an existing one and change
 the variables at the beginning to the desired application's name.
 
+`list` will list all available configurations in the repository
+
+`create` can be used to add new configurations, copying the default `.config`
+folder and using the universal script in it. Please, double check if you are
+copying the right folders of the config, and remember that you can always
+rewrite the default script so that it ignores some of the files, for example.
+
