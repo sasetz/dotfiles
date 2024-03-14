@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# option to disable all actions, instead they are replaced with stdout logging
+# when true, nothing is actually done even if the text says otherwise
+# when false, the actions are actually performed
+DEBUG=false
+
 if [[ ! -e $HOME/.local/bin/configs ]]; then
     echo "This script is running directly from the repository.
 Do you want to inject it to '~/.local/bin'? If this directory is in your PATH,
@@ -15,10 +20,37 @@ cd $PWD; ./configs \"\$@\"" > $HOME/.local/bin/configs
 fi
 
 execute_all() {
+    RESULT=0
     for script in configurations/*.sh; do
-        $script "$@"
+        if [[ $DEBUG != true ]]; then
+            $script "$@"
+        else
+            echo "[DEBUG] $script $@"
+        fi
+        if [[ $? -ne 0 ]]; then
+            RESULT=1
+            echo "Error executing script $script"
+        fi
     done
+    return $RESULT
 }
+
+finish_execution() {
+    if [[ $1 -eq 0 ]]; then
+        echo "$2"
+    else
+        echo "$3"
+    fi
+}
+
+if [[ $DEBUG == true ]]; then
+    echo "DEBUGGING IS TURNED ON."
+    echo "No actions will be performed, only logged."
+    echo "Change the variable DEBUG to false in the script to make it work again."
+    echo
+    echo '-----------------------------------------------------------------------'
+    echo
+fi
 
 case "$1" in
     backup)
@@ -26,23 +58,36 @@ case "$1" in
         BACKUP_NAME=$(date +%d.%m.%Y_%H:%M)
         if [[ $# -eq 1 ]]; then
             execute_all backup "$BACKUP_NAME"
+            finish_execution $? "Successfully created a backup!" "Failed creating a backup."
             exit
         else
             shift
             SCRIPTS=()
+            RESULT=1
             for arg in "$@"; do
                 if [[ $arg == 'all' ]]; then
                     execute_all backup "$BACKUP_NAME"
+                    finish_execution $? "Successfully created a backup!" "Failed creating a backup."
                     exit
                 fi
                 SCRIPTS+=("$arg.sh")
             done
 
+            RESULT=0
             for script in "${SCRIPTS[@]}"; do
-                configurations/$script backup "$BACKUP_NAME"
+                if [[ $DEBUG != true ]]; then
+                    configurations/$script backup "$BACKUP_NAME"
+                else
+                    echo "[DEBUG] configurations/$script backup $BACKUP_NAME"
+                fi
+                if [[ $? -ne 0 ]]; then
+                    RESULT=1
+                    echo "Error executing script $script"
+                fi
             done
+            finish_execution $RESULT "Successfully created a backup!" "Failed creating a backup."
+            exit
         fi
-        echo "Successfully created a backup!"
         ;;
 
     deploy)
@@ -57,6 +102,7 @@ case "$1" in
         fi
         if [[ $# -eq 1 ]]; then
             execute_all deploy
+            finish_execution $? "Successfully deployed!" "Failed deploying."
             exit
         else
             shift
@@ -69,17 +115,27 @@ case "$1" in
                 SCRIPTS+=("$arg.sh")
             done
 
+            RESULT=0
             for script in "${SCRIPTS[@]}"; do
-                configurations/$script deploy
+                if [[ $DEBUG != true ]]; then
+                    configurations/$script deploy
+                else
+                    echo "[DEBUG] configurations/$script deploy"
+                fi
+                if [[ $? -ne 0 ]]; then
+                    RESULT=1
+                    echo "Error executing script $script"
+                fi
             done
+            finish_execution $RESULT "Successfully deployed!" "Failed deploying."
         fi
-        echo "Successfully deployed configurations!"
         ;;
 
     commit)
         echo 'Adding applied configurations to the repository...'
         if [[ $# -eq 1 ]]; then
             execute_all commit
+            finish_execution $? "Successfully added configurations to the repository!" "Failed adding configurations to the repository."
             exit
         else
             shift
@@ -87,16 +143,26 @@ case "$1" in
             for arg in "$@"; do
                 if [[ $arg == 'all' ]]; then
                     execute_all commit
+                    finish_execution $? "Successfully added configurations to the repository!" "Failed adding configurations to the repository."
                     exit
                 fi
                 SCRIPTS+=("$arg.sh")
             done
 
+            RESULT=0
             for script in "${SCRIPTS[@]}"; do
-                configurations/$script commit
+                if [[ $DEBUG != true ]]; then
+                    configurations/$script commit
+                else
+                    echo "[DEBUG] configurations/$script commit"
+                fi
+                if [[ $? -ne 0 ]]; then
+                    RESULT=1
+                    echo "Error executing script $script"
+                fi
             done
+            finish_execution $RESULT "Successfully added configurations to the repository!" "Failed adding configurations to the repository."
         fi
-        echo "Successfully added configurations to the repository!"
         ;;
     
     list)
@@ -109,10 +175,58 @@ case "$1" in
         echo "Apply any of these configurations using 'configs deploy [configurations...]'."
         ;;
 
+    create)
+        echo 'Creating default configurations with the provided names...'
+        if [[ $# -eq 1 ]]; then
+            echo 'ERROR: Please, provide at least one configuration name to create.'
+            exit 1
+        else
+            shift
+            SCRIPTS=()
+            RESULT=1
+            for arg in "$@"; do
+                if [[ $arg == 'all' ]]; then
+                    echo "Name 'all' is reserved for specifying every configuration available. Cannot create a configuration with that name."
+                    continue
+                fi
+                if [[ -e "configurations/$arg.sh" ]]; then
+                    echo "This configuration already exists: $arg.sh -- Skipping"
+                else
+                    SCRIPTS+=("$arg")
+                    RESULT=0
+                fi
+            done
+
+            for name in "${SCRIPTS[@]}"; do
+                script="configurations/$name.sh"
+                default_script="#!/usr/bin/env bash
+
+./default_configuration.sh '$name' \"\$HOME/.config/$name\" \"./data/$name\" \"\$@\"
+"
+                if [[ $DEBUG != true ]]; then
+                    echo "$default_script" > $script
+                    chmod u+x $script
+                else
+                    echo "[DEBUG] $default_script"
+                    echo "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+                    echo "[DEBUG] this script would be saved to: $script"
+                    echo
+                    echo "[DEBUG] chmod u+x $script"
+                fi
+                if [[ $? -ne 0 ]]; then
+                    RESULT=1
+                    echo "Error creating script $script"
+                fi
+            done
+            finish_execution $RESULT "Successfully added new configurations!" "Failed adding new configurations."
+        fi
+        ;;
+
     *)
         echo "    Usage: configs backup [configuration to backup ...]
            configs deploy [configuration for deploying ...]
            configs commit [configuration for committing ...]
+           configs create [configuration names to create ...]
            configs list
 
     Verbs:
@@ -121,6 +235,7 @@ case "$1" in
     commit - save applied configurations as a replacement for the old ones in 
     the repository
     list   - list all available scripts/apps
+    create - add a default configuration with the provided name
 
     Configurations:
 
