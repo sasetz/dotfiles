@@ -1,8 +1,9 @@
-abbr --add ll ls -lAhX --group-directories-first --color=auto
-abbr --add cat batcat
+alias ll="ls -lAhX --group-directories-first --color=auto"
+alias cat=batcat
 set --export --prepend PATH $HOME/.local/bin
 
 if test -d /usr/local/timostools
+    # work setup
     abbr --add on /usr/config/bin/simbedpower.sh on
     abbr --add off /usr/config/bin/simbedpower.sh off
     abbr --add tl telnet 10.1.1.2 2501
@@ -11,6 +12,7 @@ if test -d /usr/local/timostools
 
     set --export --prepend PATH /usr/local/timostools
 else
+    # home setup
     set --export --prepend PATH /home/sasetz/intelFPGA/20.1/modelsim_ase/bin
 end
 
