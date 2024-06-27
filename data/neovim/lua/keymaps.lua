@@ -51,7 +51,7 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Diagnostics backwa
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Diagnostics forward' })
 vim.keymap.set('n', '<leader>le', vim.diagnostic.open_float, { desc = 'LSP: Open diagnostics' })
 vim.keymap.set('n', '<leader>lq', vim.diagnostic.setloclist, { desc = 'LSP: Diagnostics to location list' })
-vim.keymap.set('n', '<leader>lf', ":Format<cr>", { desc = 'LSP: Format current file' })
+vim.keymap.set('n', '<leader>lf', ':Format<cr>', { desc = 'LSP: Format current file', silent = true })
 vim.keymap.set('n', '[g', ":Gitsigns prev_hunk<cr>", { desc = 'Git hunk backward', silent = true })
 vim.keymap.set('n', ']g', ":Gitsigns next_hunk<cr>", { desc = 'Git hunk forward', silent = true })
 

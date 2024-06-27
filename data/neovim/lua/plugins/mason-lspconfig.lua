@@ -70,10 +70,16 @@ return {
     end
     mason_lspconfig.setup_handlers {
       function(server_name)
+        local init_options = {}
+        if servers[server_name] ~= nil and servers[server_name].init_options ~= nil then
+          init_options = servers[server_name].init_options
+          servers[server_name].init_options = nil
+        end
         require('lspconfig')[server_name].setup {
           capabilities = capabilities,
           on_attach = on_attach(vim.lsp.buf),
           settings = servers[server_name],
+          init_options = init_options,
         }
       end,
     }

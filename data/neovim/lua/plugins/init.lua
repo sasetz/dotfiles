@@ -126,6 +126,65 @@ require('lazy').setup {
     'glepnir/dashboard-nvim',
     event = 'VimEnter',
     opts = {
+      theme = 'doom', --  theme is doom and hyper default is hyper
+      disable_move = true,    --  default is false disable move keymap for hyper
+      shortcut_type = 'letter',   --  shorcut type 'letter' or 'number'
+      change_to_vcs_root = false, -- default is false,for open file in hyper mru. it will change to the root of vcs
+      config = {
+        header = {
+          '', '', '', '', '', '', '', '', '', '', '', '',
+          '██████╗  █████╗ ███████╗██╗  ██╗██████╗  ██████╗  █████╗ ██████╗ ██████╗',
+          ' ██╔══██╗██╔══██╗██╔════╝██║  ██║██╔══██╗██╔═══██╗██╔══██╗██╔══██╗██╔══██╗',
+          ' ██║  ██║███████║███████╗███████║██████╔╝██║   ██║███████║██████╔╝██║  ██║',
+          ' ██║  ██║██╔══██║╚════██║██╔══██║██╔══██╗██║   ██║██╔══██║██╔══██╗██║  ██║',
+          ' ██████╔╝██║  ██║███████║██║  ██║██████╔╝╚██████╔╝██║  ██║██║  ██║██████╔╝',
+          ' ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝',
+          '', '', '', '',
+        },
+        center = {
+          {
+            icon = ' ',
+            icon_hl = 'group',
+            desc = 'Create a new file',
+            desc_hl = 'group',
+            action = 'enew',
+            key = 'n',
+            key_hl = 'group',
+          },
+          {
+            icon = '󰁯 ',
+            icon_hl = 'group',
+            desc = 'Restore last session',
+            desc_hl = 'group',
+            action = 'Session load_last_session',
+            key = 'l',
+            key_hl = 'group',
+          },
+          {
+            icon = ' ',
+            icon_hl = 'group',
+            desc = 'Choose session...',
+            desc_hl = 'group',
+            action = 'Session load_session',
+            key = 's',
+            key_hl = 'group',
+          },
+          {
+            icon = '󰗼 ',
+            icon_hl = 'group',
+            desc = 'Quit',
+            desc_hl = 'group',
+            action = 'q',
+            key = 'q',
+            key_hl = 'group',
+          },
+        }
+      },
+      hide = {
+        statusline = true,
+        tabline = true,
+        winbar = true,
+      },
     },
     dependencies = { 'nvim-tree/nvim-web-devicons' }
   },
@@ -267,6 +326,28 @@ require('lazy').setup {
   {
     'rcarriga/nvim-dap-ui',
     opts = {
+    },
+    dependencies = {
+      'nvim-neotest/nvim-nio',
     }
   },
+
+  -- JS linter
+  {
+    'mfussenegger/nvim-lint',
+    event = 'VeryLazy',
+    config = function ()
+      require('lint').linters_by_ft = {
+        markdown = { 'vale' },
+        javascript = { 'eslint' },
+        typescript = { 'eslint' },
+        cpp = { 'clangtidy' },
+      }
+    end,
+  },
+
+  -- Typst support
+  {
+    'kaarmu/typst.vim',
+  }
 }
