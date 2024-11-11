@@ -1,14 +1,6 @@
 # This file contains fish universal variable definitions.
 # VERSION: 3.0
 SETUVAR __fish_initialized:3400
-SETUVAR _fish_abbr_cat:batcat
-SETUVAR _fish_abbr_ll:ls\x20\x2dlAhX\x20\x2d\x2dgroup\x2ddirectories\x2dfirst\x20\x2d\x2dcolor\x3dauto
-SETUVAR _fish_abbr_mk:\x2e/mk
-SETUVAR _fish_abbr_off:/usr/config/bin/simbedpower\x2esh\x20off
-SETUVAR _fish_abbr_on:/usr/config/bin/simbedpower\x2esh\x20on
-SETUVAR _fish_abbr_ssh:\x2do\x20UserKnownHostsFile\x3d/dev/null\x20\x2do\x20StrictHostKeyChecking\x3dno\x20admin\x4010\x2e1\x2e1\x2e3
-SETUVAR _fish_abbr_tl:telnet\x2010\x2e1\x2e1\x2e2\x202501
-SETUVAR _fish_abbr_tsh:ssh\x20\x2do\x20UserKnownHostsFile\x3d/dev/null\x20\x2do\x20StrictHostKeyChecking\x3dno\x20admin\x4010\x2e1\x2e1\x2e3
 SETUVAR fish_color_autosuggestion:555\x1ebrblack
 SETUVAR fish_color_cancel:\x2dr
 SETUVAR fish_color_command:005fd7

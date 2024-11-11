@@ -53,7 +53,7 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
+beautiful.init('/home/sasetz/.config/awesome/theme.lua')
 
 -- This is used later as the default terminal and editor to run.
 local terminal = "alacritty"
@@ -70,10 +70,12 @@ local modkey = "Mod4"
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
     awful.layout.suit.tile,
-    awful.layout.suit.max,
     awful.layout.suit.floating,
-    awful.layout.suit.max.fullscreen,
 }
+
+local function lock_screen()
+    awful.spawn.with_shell("light-locker-command --lock")
+end
 -- }}}
 
 -- {{{ Menu
@@ -101,7 +103,7 @@ local mylauncher = awful.widget.launcher({
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
 -- }}}
 
--- Keyboard map indicator and switcher
+-- {{{Keyboard map indicator and switcher
 local mykeyboardlayout = awful.widget.keyboardlayout()
 
 local function generate_tag(name, icon, key, layout)
@@ -115,15 +117,15 @@ end
 
 local l = awful.layout.suit
 local tags = {
-    generate_tag("terminal", "", "#10", l.tile), -- 1
-    generate_tag("browser", "󰈹", "#11", l.max), -- 2
-    generate_tag("files", "󰪶", "#12", l.tile), -- 3
-    generate_tag("passwords", "󰌆", "#24", l.tile), -- q
-    generate_tag("telegram", "", "#25", l.tile), -- w
-    generate_tag("discord", "󰙯", "#26", l.tile), -- e
-    generate_tag("music", "󰓇", "#38", l.max), -- a
-    generate_tag("view", "󰋩", "#39", l.tile), -- s
-    generate_tag("miscellaneous", "󰂓", "#40", l.max.fullscreen), -- d
+    generate_tag("terminal", "  ", "#10", l.tile), -- 1
+    generate_tag("browser", " 󰈹 ", "#11", l.tile), -- 2
+    generate_tag("files", " 󰪶 ", "#12", l.tile), -- 3
+    generate_tag("passwords", " 󰌆 ", "#24", l.tile), -- q
+    generate_tag("telegram", "  ", "#25", l.tile), -- w
+    generate_tag("discord", " 󰙯 ", "#26", l.tile), -- e
+    generate_tag("music", " 󰓇 ", "#38", l.tile), -- a
+    generate_tag("view", " 󰋩 ", "#39", l.tile), -- s
+    generate_tag("miscellaneous", " 󰂓 ", "#40", l.floating), -- d
 }
 
 function tags.get_names()
@@ -141,6 +143,8 @@ function tags.get_layouts()
     end
     return tag_names
 end
+
+--}}}
 
 -- {{{ Wibar
 -- Create a textclock widget
@@ -254,7 +258,7 @@ awful.screen.connect_for_each_screen(function(s)
             s.mylayoutbox,
             logout_menu_widget {
                 font = "FiraCode Nerd Font 10",
-                onlock = function() awful.spawn.with_shell('light-locker-command -l') end
+                onlock = function() lock_screen() end
             },
         },
     }
@@ -335,7 +339,12 @@ local globalkeys = gears.table.join(
         { description = "go back", group = "client" }),
 
     -- Standard program
-    awful.key({ modkey, }, "Return", function() awful.spawn(terminal) end,
+    awful.key({ modkey, }, "Return", function()
+            awful.spawn(terminal, {
+                maximized  = false,
+                fullscreen = false,
+            })
+        end,
         { description = "open a terminal", group = "launcher" }),
     awful.key({ modkey, "Control" }, "r", awesome.restart,
         { description = "reload awesome", group = "awesome" }),
@@ -444,7 +453,12 @@ local globalkeys = gears.table.join(
     end),
     awful.key({}, "XF86MonBrightnessUp", function()
         awful.util.spawn("xbacklight -inc 15")
-    end)
+    end),
+    awful.key({ modkey }, "#19", function()
+            awful.spawn.with_shell(
+            "maim --select --hidecursor --bordersize 2 --color=0.9,0.7,0.3,0.9 --padding 5 --capturebackground | xclip -selection clipboard -t image/png")
+        end,
+        { description = "make a screenshot", group = "launcher" })
 )
 
 local clientkeys = gears.table.join(
@@ -622,26 +636,43 @@ awful.rules.rules = {
 
     -- Set Firefox to always map on the tag named "2" on screen 1.
     {
-        rule = { class = "Firefox" },
-        properties = { screen = 1, tag = tags[2].icon }
+        rule = { class = "firefox" },
+        properties = {
+            tag = tags[2].icon,
+            screen = awful.screen.preferred,
+            border_width = 0,
+        }
     },
 
     {
-        rule = { class = "Steam" },
-        properties = { screen = 1, tag = tags[9].icon }
+        rule = { class = "steam" },
+        properties = {
+            tag = tags[9].icon,
+            screen = awful.screen.preferred,
+        }
     },
 
     {
         rule = { class = "KeePassXC" },
-        properties = { screen = 1, tag = tags[4].icon }
+        properties = {
+            tag = tags[4].icon,
+            screen = awful.screen.preferred,
+        }
     },
 
+    {
+        rule = { class = "discord" },
+        properties = {
+            tag = tags[6].icon,
+            screen = awful.screen.preferred,
+        }
+    },
 }
 -- }}}
 
 -- {{{ Signals
 -- Signal function to execute when a new client appears.
-client.connect_signal("manage", function(c)
+client.connect_signal("manage", function(c, context)
     -- Set the windows at the slave,
     -- i.e. put it at the end of others instead of setting it master.
     -- if not awesome.startup then awful.client.setslave(c) end
@@ -651,6 +682,10 @@ client.connect_signal("manage", function(c)
         and not c.size_hints.program_position then
         -- Prevent clients from being unreachable after screen count changes.
         awful.placement.no_offscreen(c)
+    end
+
+    if c.floating and context == "new" then
+        c.placement = awful.placement.no_offscreen + awful.placement.no_overlap + awful.placement.centered
     end
 end)
 
@@ -701,9 +736,11 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 -- {{{ Autostart applications
 awful.spawn.with_shell("nitrogen --restore")
 awful.spawn.with_shell("light-locker")
-awful.spawn.with_shell("udiskie --tray")
-awful.spawn.with_shell("flameshot")
 awful.spawn.with_shell("picom")
+awful.spawn.with_shell("solaar --window=hide")
+
+awful.spawn.with_shell("keepassxc")
+awful.spawn.with_shell(terminal)
 -- }}}
 
 -- vim: ft=lua:fdm=marker
