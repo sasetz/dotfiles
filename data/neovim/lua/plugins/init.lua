@@ -292,13 +292,16 @@ require('lazy').setup {
   -- adds simple session management, using vim's builtin sessions
   {
     'Shatur/neovim-session-manager',
-    opts = {
-      autoload_mode = 'Disabled',
+    opts = function ()
+    local config = require('session_manager.config')
+    return {
+      autoload_mode = config.AutoloadMode.Disabled,
       autosave_ignore_dirs = {
         '~'
       },
       autosave_only_in_session = true,
-    },
+    }
+    end,
   },
 
   -- toggleable terminal inside Neovim

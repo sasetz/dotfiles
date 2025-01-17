@@ -7,13 +7,6 @@ return {
       }
     }
   },
-  tsserver = {
-    init_options = {
-      preferences = {
-        disableSuggestions = true,
-      }
-    }
-  },
   clangd = {
   },
 }
