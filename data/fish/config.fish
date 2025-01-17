@@ -1,3 +1,6 @@
+echo PENIS
+
+
 alias pac='sudo pacman'
 alias sys='sudo systemctl'
 
